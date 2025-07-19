@@ -1,6 +1,7 @@
 services:
   rebot:
-    build: .
+    image: ghcr.io/repryty/rebot-8:main
+    pull_policy: always
     container_name: rebot-8
     restart: unless-stopped
     env_file:
