@@ -1,0 +1,11 @@
+services:
+  rebot:
+    build: .
+    container_name: rebot-8
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./images:/app/images
+      - ./log:/app/log

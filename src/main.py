@@ -29,7 +29,7 @@ async def on_ready():
     
     
     try:
-        with sqlite3.connect("data/database.db") as conn:
+        with sqlite3.connect("data/database.db", timeout=10.0) as conn:
             cursor = conn.cursor()
 
             # 세션 테이블 생성
@@ -48,6 +48,7 @@ async def on_ready():
                 message_content TEXT,
                 attachments_list TEXT,
                 role TEXT,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (session_id) REFERENCES chat_sessions (session_id)
             )""")
     except sqlite3.Error as e:
@@ -57,7 +58,7 @@ async def on_ready():
     # 백그라운드 태스크로 워커 시작
     asyncio.create_task(gemini_worker_class.worker_loop())
 
-    logging.info("REBOT client is activated.")
+    logging.info(">> ALL READY! <<")
 
 @client.event
 async def on_message(message: discord.Message):
@@ -68,17 +69,24 @@ async def on_message(message: discord.Message):
     args = message.content.removeprefix(config.BOT_PREFIX).split() # !고양이 최고 => [고양이, 최고]
     command = args.pop(0)
     # print(commands.commands_list)
-    if command in commands.commands_list:
-        await commands.commands_list[command](commands.CommandContext(message, args, client))
-    else:
-        gemini_message = await message.channel.send("<a:loading:1264015095223287878>")
-        # asyncio.Queue의 put은 async 메서드
-        await gemini_queue.put({
-            "message_id": message.id,
-            "sent_bot_message": gemini_message,
-            "guild_id": message.guild.id,
-            "content": message.content,
-            "attachments": message.attachments
-        })
+    try:
+        if command in commands.commands_list:
+            await commands.commands_list[command](commands.CommandContext(message, args, client))
+        else:
+            gemini_message = await message.channel.send("<a:loading:1264015095223287878>")
+            # asyncio.Queue의 put은 async 메서드
+            await gemini_queue.put({
+                "message_id": message.id,
+                "sent_bot_message": gemini_message,
+                "guild_id": message.guild.id,
+                "content": message.content.removeprefix(config.BOT_PREFIX),
+                "attachments": message.attachments
+            })
+    except Exception as e:
+        await message.channel.send(embed=discord.Embed(
+            color=config.WARN_COLOR,
+            title="REBOT ERROR Handler",
+            description=f"오류가 발생했습니다. 다시 시도해주세요: {e}"
+        ))
 
 client.run(config.DISCORD_TOKEN)

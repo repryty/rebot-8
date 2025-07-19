@@ -16,6 +16,10 @@ class CommandContext:
     @property
     def channel(self):
         return self.message.channel
+    
+    @property
+    def guild(self):
+        return self.message.guild
 
 commands_list = dict()
 
