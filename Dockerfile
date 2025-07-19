@@ -17,3 +17,4 @@ RUN uv pip install --system --no-cache .
 COPY . .
 
 # 애플리케이션을 실행할 명령어입니다.
+CMD ["python", "src/main.py"]
