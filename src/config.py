@@ -14,29 +14,31 @@ BOT_PREFIX = "ㄹ "
 with open("data/system_instruction.txt", "r", encoding="utf-8") as file:
     SYSTEM_INSTRUCTION = file.read()
 
-AVAILABLE_MIME_TYPES = set([
-    "image/png",
-    "image/jpeg",
-    "image/webp",
-    "image/heic",
-    "image/heif",
-    "application/pdf",
-    "video/mp4",
-    "video/mpeg",
-    "video/mov",
-    "video/avi",
-    "video/x-flv",
-    "video/mpg",
-    "video/webm",
-    "video/wmv",
-    "video/3gpp",
-    "audio/wav",
-    "audio/mp3",
-    "audio/aiff",
-    "audio/aac",
-    "audio/ogg",
-    "audio/flac"
-])
+AVAILABLE_MIME_TYPES = set(
+    [
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/heic",
+        "image/heif",
+        "application/pdf",
+        "video/mp4",
+        "video/mpeg",
+        "video/mov",
+        "video/avi",
+        "video/x-flv",
+        "video/mpg",
+        "video/webm",
+        "video/wmv",
+        "video/3gpp",
+        "audio/wav",
+        "audio/mp3",
+        "audio/aiff",
+        "audio/aac",
+        "audio/ogg",
+        "audio/flac",
+    ]
+)
 
 EMOJIES = {
     "🚪": "<:me:1144858072624406588>",
@@ -51,5 +53,5 @@ EMOJIES = {
     "😢": "<:sad:1144857284112040026>",
 }
 
-MAIN_COLOR = discord.Colour.from_rgb(34, 75, 176) #224bb0
-WARN_COLOR = discord.Colour.from_rgb(181, 0, 0) #b50000
+MAIN_COLOR = discord.Colour.from_rgb(34, 75, 176)  # 224bb0
+WARN_COLOR = discord.Colour.from_rgb(181, 0, 0)  # b50000

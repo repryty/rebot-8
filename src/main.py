@@ -17,7 +17,8 @@ logging.basicConfig(level=logging.INFO)
 client = discord.Client(intents=config.DISCORD_INTENTS)
 
 gemini_queue = asyncio.Queue()
-gemini_worker_class= gemini_worker.GeminiWorker(gemini_queue)
+gemini_worker_class = gemini_worker.GeminiWorker(gemini_queue)
+
 
 @client.event
 async def on_ready():
@@ -26,8 +27,7 @@ async def on_ready():
     # 디렉토리 생성
     os.makedirs("data", exist_ok=True)
     os.makedirs("images", exist_ok=True)
-    
-    
+
     try:
         with sqlite3.connect("data/database.db", timeout=10.0) as conn:
             cursor = conn.cursor()
@@ -60,13 +60,14 @@ async def on_ready():
 
     logging.info(">> ALL READY! <<")
 
+
 @client.event
 async def on_message(message: discord.Message):
     if not message.content.startswith(config.BOT_PREFIX):
         return
     if message.author == client.user:
         return
-    args = message.content.removeprefix(config.BOT_PREFIX).split() # !고양이 최고 => [고양이, 최고]
+    args = message.content.removeprefix(config.BOT_PREFIX).split()  # !고양이 최고 => [고양이, 최고]
     command = args.pop(0)
     # print(commands.commands_list)
     try:
@@ -75,18 +76,23 @@ async def on_message(message: discord.Message):
         else:
             gemini_message = await message.channel.send("<a:loading:1264015095223287878>")
             # asyncio.Queue의 put은 async 메서드
-            await gemini_queue.put({
-                "message_id": message.id,
-                "sent_bot_message": gemini_message,
-                "guild_id": message.guild.id,
-                "content": message.content.removeprefix(config.BOT_PREFIX),
-                "attachments": message.attachments
-            })
+            await gemini_queue.put(
+                {
+                    "message_id": message.id,
+                    "sent_bot_message": gemini_message,
+                    "guild_id": message.guild.id,
+                    "content": message.content.removeprefix(config.BOT_PREFIX),
+                    "attachments": message.attachments,
+                }
+            )
     except Exception as e:
-        await message.channel.send(embed=discord.Embed(
-            color=config.WARN_COLOR,
-            title="REBOT ERROR Handler",
-            description=f"오류가 발생했습니다. 다시 시도해주세요: {e}"
-        ))
+        await message.channel.send(
+            embed=discord.Embed(
+                color=config.WARN_COLOR,
+                title="REBOT ERROR Handler",
+                description=f"오류가 발생했습니다. 다시 시도해주세요: {e}",
+            )
+        )
+
 
 client.run(config.DISCORD_TOKEN)

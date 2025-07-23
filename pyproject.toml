@@ -10,3 +10,6 @@ dependencies = [
     "google-genai>=1.26.0",
     "ruff>=0.12.4",
 ]
+
+[tool.ruff]
+line-length = 100
