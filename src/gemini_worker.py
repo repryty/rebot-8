@@ -137,7 +137,7 @@ class GeminiWorker:
                 + [
                     types.Content(
                         role="model",
-                        parts="Sure! Here is response:\n",
+                        parts=[types.Part(text="Sure! Here is response:\n")],
                     )
                 ],
             )
