@@ -133,6 +133,12 @@ class GeminiWorker:
                         role="user",
                         parts=[types.Part(text=task["content"])] + attachments,
                     )
+                ]
+                + [
+                    types.Content(
+                        role="model",
+                        parts="Sure! Here is response:\n",
+                    )
                 ],
             )
 
